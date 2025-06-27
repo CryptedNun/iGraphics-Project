@@ -524,42 +524,42 @@ int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
 
-    if(iLoadImage(&menuBackground, "C:\\Users\\HASAN\\Projects\\Codes\\CSE102 iGraphics\\Modern-iGraphics-main\\assets\\images\\menuBackground.png")) 
+    if(iLoadImage(&menuBackground, "assets\\images\\menuBackground.png")) 
         printf("Background loaded!\n");
     else 
         printf("Failed to load background!\n");
 
-    if(iLoadImage(&logo, "C:\\Users\\HASAN\\Projects\\Codes\\CSE102 iGraphics\\Modern-iGraphics-main\\assets\\images\\bounce_classic_transparent.png")) 
+    if(iLoadImage(&logo, "assets\\images\\bounce_classic_transparent.png")) 
         printf("Logo loaded!\n");
     else
         printf("Failed to load logo!\n");
 
-    if(iLoadImage(&playButton, "C:\\Users\\HASAN\\Projects\\Codes\\CSE102 iGraphics\\Modern-iGraphics-main\\assets\\images\\menu_button_play@4x.png"))
+    if(iLoadImage(&playButton, "assets\\images\\menu_button_play@4x.png"))
         printf("Success loading playButton!\n");
     else
         printf("Failed loading playButton!\n");
 
-    if(iLoadImage(&leaderboardButton, "C:/Users/HASAN/Projects/Codes/CSE102 iGraphics/Modern-iGraphics-main/assets/images/menu_button_leaderboard@2x.png"))
+    if(iLoadImage(&leaderboardButton, "assets/images/menu_button_leaderboard@2x.png"))
         printf("Success loading leaderboardButton!\n");
     else 
         printf("Failed loading leaderboardButton!\n");
 
-    if(iLoadImage(&creditsButton, "C:\\Users\\HASAN\\Projects\\Codes\\CSE102 iGraphics\\Modern-iGraphics-main\\assets\\images\\Credits.jpg"))
+    if(iLoadImage(&creditsButton, "assets\\images\\Credits.jpg"))
         printf("Loaded creditsButton!\n");
     else
         printf("Failed loading creditsButton!\n");
 
-    if(iLoadImage(&instructionsButton, "C:\\Users\\HASAN\\Projects\\Codes\\CSE102 iGraphics\\Modern-iGraphics-main\\assets\\images\\instructions.jpg")) 
+    if(iLoadImage(&instructionsButton, "assets\\images\\instructions.jpg")) 
         printf("Loaded instructionsButton!\n");
     else 
         printf("Failed to load instructionsButton!\n");
     
-    if(iLoadImage(&exitButton, "C:\\Users\\HASAN\\Projects\\Codes\\CSE102 iGraphics\\Modern-iGraphics-main\\assets\\images\\exitButton.jpg")) 
+    if(iLoadImage(&exitButton, "assets\\images\\exitButton.jpg")) 
         printf("Loaded instructionsButton!\n");
     else 
         printf("Failed to load exitButton!\n");
     
-    if(iLoadImage(&ball, "C:\\Users\\HASAN\\Projects\\Codes\\CSE102 iGraphics\\Modern-iGraphics-main\\assets\\images\\ball_small@2x.png"))
+    if(iLoadImage(&ball, "assets\\images\\ball_small@2x.png"))
         printf("Successfully loaded ballImage!\n");
     else 
         printf("Failed loading ballImage!\n");
