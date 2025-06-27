@@ -277,8 +277,8 @@ void drawHoop()
 
         case 3:
             iTextBold(500, 510, "Creators: ");
-            iTextAdvanced(500, 510-25, "Safat Ahmed [2405086]", 0.15, 2, GLUT_STROKE_ROMAN);
-            iTextAdvanced(500, 460, "Hasan Mahmud [2405088]", 0.15, 2, GLUT_STROKE_ROMAN);
+            iText(500, 510-25, "Safat Ahmed [2405086]", GLUT_BITMAP_HELVETICA_18);
+            iText(500, 460, "Hasan Mahmud [2405088]", GLUT_BITMAP_HELVETICA_18);
 
             iShowLoadedImage(520, 60, &exitButton, 240, 60);
         break;
