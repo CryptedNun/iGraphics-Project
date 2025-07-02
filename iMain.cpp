@@ -404,6 +404,12 @@ void iKeyboard(unsigned char key) {
     if ((key == 'w' || key == ' ') && available_jump) {
         jump = true;
     }
+    if(key == 'a') {
+        left = !left;
+    }
+    if(key == 'd') {
+        right = !right;
+    }
 }
 
 // TODO: Implement ball rotation
