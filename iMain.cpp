@@ -12,7 +12,7 @@
 // Variables for gravitational influence
 double v_y_i = 0;
 double del_y = 0;
-// TODO: Tweak dt, gravity and V_Y_INITIAL to make the jump little smoother 
+// TODO: Tweak dt, gravity and V_Y_INITIAL to make the jump a little smoother 
 double gravity = 0.075;
 double dt = 0.275;
 
