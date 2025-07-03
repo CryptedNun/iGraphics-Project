@@ -7,18 +7,26 @@
 #define SCREEN_HEIGHT 600
 #define WORLD_WIDTH 4000
 #define WORLD_HEIGHT 3000
+#define V_Y_INITIAL 6;
+
+// Variables for gravitational influence
+double v_y_i = 0;
+double del_y = 0;
+// TODO: Tweak dt, gravity and V_Y_INITIAL to make the jump little smoother 
+double gravity = 0.075;
+double dt = 0.275;
 
 int gameState = 0;
-Image playButton, leaderboardButton, creditsButton, instructionsButton, exitButton, menuBackground, logo, ball;
+Image playButton, leaderboardButton, creditsButton, instructionsButton, exitButton, menuBackground, logo, ball, dyn_spike;
 double cameraX = 0, cameraY = 0;
 
+double spawnX = 90, spawnY = 2270;
 double ballx = 90, bally = 2270, ball_radius = 20;
 double degree = 0;
 double animate = 0;
 int l = 100;
-double velocity_x = .30;
+double velocity_x = .5;
 double velocity_y = 1.5;
-double gravity = .5;
 bool right = 0, left = 0, jump = 0, available_jump = false;
 int i = 0;
 bool upper_side_collision = false, lower_side_collision = false, left_side_collision = false, right_side_collision = false, collision = false;
@@ -106,7 +114,7 @@ platform platforms[] = {
     {3730, 2050, 120, 150}};
 
 trap traps[] = {
-    {800, 80, 1000, 80, 900, 80, 0.03, 0.03}};
+    {1010, 2100, 1430, 2100, 900, 80, .08, .08}};
 
 int number_of_platforms = 23;
 int number_of_hoops = 6;
@@ -144,17 +152,11 @@ void drawCloud(int x, int y)
 
 void drawTrap()
 { // ! all square-shaped trap of length l = 100, moving.
-    for (int i = 0; i < number_of_traps; i++)
-    {
-        iSetLineWidth(5);
-
+    for (int i = 0; i < number_of_traps; i++) {
         double tx = traps[i].x;
         double ty = traps[i].y;
 
-        iLine(tx + l / 2 - cameraX, ty - cameraY, tx - l / 2 - cameraX, ty - cameraY);
-        iLine(tx - cameraX, ty + l / 2 - cameraY, tx - cameraX, ty - l / 2 - cameraY);
-        iLine(tx + l / 2 - cameraX, ty + l / 2 - cameraY, tx - l / 2 - cameraX, ty - l / 2 - cameraY);
-        iLine(tx + l / 2 - cameraX, ty - l / 2 - cameraY, tx - l / 2 - cameraX, ty + l / 2 - cameraY);
+        iShowLoadedImage(tx - l/2 - cameraX, ty - l/2 - cameraY, &dyn_spike, 100, 100);
 
         traps[i].x += traps[i].dx;
         traps[i].y += traps[i].dy;
@@ -403,6 +405,8 @@ void iMouseWheel(int dir, int mx, int my)
 void iKeyboard(unsigned char key) {
     if ((key == 'w' || key == ' ') && available_jump) {
         jump = true;
+        v_y_i = V_Y_INITIAL;
+        
     }
     if(key == 'a') {
         left = !left;
@@ -412,10 +416,14 @@ void iKeyboard(unsigned char key) {
     }
 }
 
-// TODO: Implement ball rotation
 void ballmove()
 {
-    bally -= gravity;
+    del_y = v_y_i*dt - .5*gravity*dt*dt;
+    if(del_y <= -1.5) del_y = -1.5;          //* Terminal velocity
+    bally += del_y;
+    v_y_i -= gravity*dt;
+
+    // bally -= gravity;
     if (right) {
         ballx += velocity_x;
     }
@@ -444,6 +452,9 @@ void ballmove()
             if (ballBottom <= platTop && ballBottom >= platBottom && ballx > platLeft && ballx < platRight)
             {
                 bally = platTop + ball_radius;
+                // TODO: Implement immediate jump during rebound, currently that's missing
+                v_y_i = 0;
+                del_y = 0;
                 available_jump = true;
             }
             else
@@ -455,6 +466,7 @@ void ballmove()
             if (ballTop > platBottom && bally < platBottom)
             {
                 bally = platBottom - ball_radius;
+                v_y_i = -v_y_i * 0.2; // 0.5 is the bounce factor, tweak as needed
                 lower_side_collision=true;
             }else{
                 lower_side_collision=false;
@@ -489,22 +501,23 @@ void ballmove()
         if (ballLeft < trapRight && ballRight > trapLeft && ballTop > trapBottom && ballBottom < trapTop)
         {
             iDelay(1);
-            ballx = 100;
-            bally = 150;
+            ballx = spawnX;
+            bally = spawnY;
         }
     }
 
-    if (jump)
-    {
-        bally += velocity_y;
-        i++;
-        if (i == 420||lower_side_collision)
-        {
-            jump = false;
-            i = 0;
+    // TODO: Implement gravitationally influenced y_axis trajectory
+    // if (jump) {
+    //     v_y_i = V_Y_INITIAL;
+    //     // bally += velocity_y;
+    //     // i++;
+    //     // if (i == 420||lower_side_collision)
+    //     // {
+    //     //     jump = false;
+    //     //     i = 0;
 
-        }
-    }
+    //     // }
+    // }
 
     // TODO: Implement Hoop Pass and Spike Collision
     //? Used a margin = 3 to make the hoop pass more fluid.
@@ -569,6 +582,11 @@ int main(int argc, char *argv[])
         printf("Successfully loaded ballImage!\n");
     else 
         printf("Failed loading ballImage!\n");
+
+    if(iLoadImage(&dyn_spike, "assets/images/dyn_thorn@2x.png"))
+        printf("Successfully loaded dyn_spike!\n");
+    else 
+        printf("Failed loading dyn_spike!\n");
 
     iSetTimer(10, animated);
     iSetTimer(1, ballmove);
