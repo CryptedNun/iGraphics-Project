@@ -12,7 +12,6 @@
 // Variables for gravitational influence
 double v_y_i = 0;
 double del_y = 0;
-// TODO: Tweak dt, gravity and V_Y_INITIAL to make the jump a little smoother 
 double gravity = 0.075;
 double dt = 0.275;
 
@@ -466,10 +465,10 @@ void ballmove()
             if (ballTop > platBottom && bally < platBottom)
             {
                 bally = platBottom - ball_radius;
-                v_y_i = -v_y_i * 0.2; // 0.5 is the bounce factor, tweak as needed
-                lower_side_collision=true;
+                v_y_i = 0; 
+                lower_side_collision = true;
             }else{
-                lower_side_collision=false;
+                lower_side_collision = false;
             }
 
             // Hitting the left side of the platform
