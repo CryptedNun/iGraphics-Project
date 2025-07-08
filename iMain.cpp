@@ -7,7 +7,9 @@
 #define SCREEN_HEIGHT 600
 #define WORLD_WIDTH 4000
 #define WORLD_HEIGHT 600
-#define V_Y_INITIAL 6;
+#define V_Y_INITIAL 5.5
+#define THORN_WIDTH 20
+#define THORN_HEIGHT 40
 
 // Variables for gravitational influence
 double v_y_i = 0;
@@ -16,7 +18,7 @@ double gravity = 0.075;
 double dt = 0.275;
 
 int gameState = 0;
-Image playButton, leaderboardButton, creditsButton, instructionsButton, exitButton, menuBackground, logo, ball, dyn_spike, spike;
+Image playButton, leaderboardButton, creditsButton, instructionsButton, exitButton, menuBackground, logo, ball, dyn_spike, spike, pop_ball;
 double cameraX = 0, cameraY = 0;
 
 double spawnX = 90, spawnY = 150;
@@ -31,6 +33,7 @@ int i = 0;
 bool upper_side_collision = false, lower_side_collision = false, left_side_collision = false, right_side_collision = false, collision = false;
 // now we dont have work with all those bool functions but they are declared for further collision detection and control . we may need to use them later for controling balls
 
+bool didBallPop = false;
 double smallHoop_width = 10, smallHoop_height = 35;
 double largeHoop_width = 20, largeHoop_height = 50;
 
@@ -72,7 +75,7 @@ struct hoop
 
 // TODO: Implement, utilise and draw "Spikes"
 // ! Initialises a struct called "spike"
-struct spike
+struct thorn
 {
     double x;
     double y;
@@ -147,13 +150,21 @@ hoop hoops[] = {
 };
 
 trap traps[] = {
-    {1010, 90, 1430, 90, 900, 80, .08, .08}};
+    {1010, 90, 1430, 90, 900, 80, .08, .08}
+};
+
+thorn thorns[] = {
+    {1900, 40},
+    {2100, 40},
+    {400, 40},
+    {3350, 40}
+};
 
 int number_of_platforms = 23;
 int number_of_hoops = 6;
 int number_of_traps = 1;
 // TODO: Initialise the below variable after constructing spike code
-int number_of_spikes;
+int number_of_thorns = 4;
 
 void updateCamera()
 { // ! Sliding Window Camera
@@ -288,8 +299,13 @@ void drawHoop()
     }
 }
 
+//! spikeWidth = 20, spikeHeight = 40.
 void drawSpike() {
     // TODO: Write code for rendering spikes
+    for(int i=0; i < number_of_thorns; i++) {
+        iShowLoadedImage(thorns[i].x - cameraX, thorns[i].y - cameraY, &spike, THORN_WIDTH, THORN_HEIGHT);
+    }
+    
 }
 
 // TODO: Create gameStates, if(gameState <= 5) call gameStateRender to render menus, else run game.
@@ -380,12 +396,17 @@ void iDraw() {
 
         drawHoop();
 
+        drawSpike();
         iSetColor(255, 0, 0);
-        iFilledCircle(ballx - cameraX, bally - cameraY, ball_radius); // * Draws the ball skeleton
-        
-        iRotate(ballx - cameraX, bally - cameraY, degree);
-        iShowLoadedImage(ballx - cameraX - 20, bally - cameraY - 20, &ball, 40, 40);
-        iUnRotate();
+
+        if(didBallPop) {
+            iShowLoadedImage(ballx - cameraX - 20, bally - cameraY - 20, &pop_ball, 40, 40);
+        } else {
+            iFilledCircle(ballx - cameraX, bally - cameraY, ball_radius);
+            iRotate(ballx - cameraX, bally - cameraY, degree);
+            iShowLoadedImage(ballx - 20 - cameraX, bally - 20 - cameraY, &ball, 40, 40);
+            iUnRotate();
+        }
     }
 }
 
@@ -536,12 +557,11 @@ void ballmove()
         double ballLeft = ballx - ball_radius;
         double ballRight = ballx + ball_radius;
 
+        iShowLoadedImage(100, 100, &pop_ball, 40, 40);
         // Detect if the ball collides with any of the traps
         if (ballLeft < trapRight && ballRight > trapLeft && ballTop > trapBottom && ballBottom < trapTop)
         {
-            iDelay(1);
-            ballx = spawnX;
-            bally = spawnY;
+            didBallPop = true;
         }
     }
 
@@ -571,7 +591,33 @@ void ballmove()
         }
     }
 
+    // TODO: Implement thorn/spike collision
+    for(int i=0; i<number_of_thorns; i++) {
+        double thornLeft = thorns[i].x;
+        double thornRight = thorns[i].x + THORN_WIDTH;
+        double thornBottom = thorns[i].y;
+        double thornTop = thorns[i].y + THORN_HEIGHT;
+        double ballBottom = bally - ball_radius;
+        double ballTop = bally + ball_radius;
+        double ballLeft = ballx - ball_radius;
+        double ballRight = ballx + ball_radius;
+        if(ballLeft < thornRight && ballRight > thornLeft && ballTop > thornBottom && ballBottom < thornTop) {
+            didBallPop = true;
+            // iDelay(2);
+            // ballx = spawnX;
+            // bally = spawnY;
+        }
+    }
     updateCamera();
+}
+
+void BallPop() {
+    if(didBallPop) {
+        iDelay(2);
+        ballx = spawnX;
+        bally = spawnY;
+        didBallPop = false;
+    }
 }
 
 void iSpecialKeyboard(unsigned char key)
@@ -632,8 +678,14 @@ int main(int argc, char *argv[])
     else 
         printf("Couldn't load thorns.\n");
 
+    if(iLoadImage(&pop_ball, "assets\\images\\ball_pop@2x.png"))
+        printf("Loaded ballPop!\n");
+    else 
+        printf("Couldn't load ballPop.\n");
+
     iSetTimer(10, animated);
     iSetTimer(1, ballmove);
+    iSetTimer(15, BallPop);
     iInitialize(800, 600, "Bounce Classic Lite");
     return 0;
 }
