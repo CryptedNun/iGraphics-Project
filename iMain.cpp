@@ -16,7 +16,7 @@ double gravity = 0.075;
 double dt = 0.275;
 
 int gameState = 0;
-Image playButton, leaderboardButton, creditsButton, instructionsButton, exitButton, menuBackground, logo, ball, dyn_spike;
+Image playButton, leaderboardButton, creditsButton, instructionsButton, exitButton, menuBackground, logo, ball, dyn_spike, spike;
 double cameraX = 0, cameraY = 0;
 
 double spawnX = 90, spawnY = 150;
@@ -147,11 +147,13 @@ hoop hoops[] = {
 };
 
 trap traps[] = {
-    {1010, 2100, 1430, 2100, 900, 80, .08, .08}};
+    {1010, 90, 1430, 90, 900, 80, .08, .08}};
 
 int number_of_platforms = 23;
 int number_of_hoops = 6;
 int number_of_traps = 1;
+// TODO: Initialise the below variable after constructing spike code
+int number_of_spikes;
 
 void updateCamera()
 { // ! Sliding Window Camera
@@ -284,6 +286,10 @@ void drawHoop()
 
         iEllipse(hoops[i].x - cameraX, hoops[i].y - cameraY, hoops[i].width, hoops[i].height);
     }
+}
+
+void drawSpike() {
+    // TODO: Write code for rendering spikes
 }
 
 // TODO: Create gameStates, if(gameState <= 5) call gameStateRender to render menus, else run game.
@@ -617,9 +623,14 @@ int main(int argc, char *argv[])
         printf("Failed loading ballImage!\n");
 
     if(iLoadImage(&dyn_spike, "assets/images/dyn_thorn@2x.png"))
-        printf("Successfully loaded dyn_spike!\n");
+        printf("Successfully loaded trap!\n");
     else 
-        printf("Failed loading dyn_spike!\n");
+        printf("Failed loading trap!\n");
+
+    if(iLoadImage(&spike, "assets/images/thorn@2x.png"))
+        printf("Loaded thorns!\n");
+    else 
+        printf("Couldn't load thorns.\n");
 
     iSetTimer(10, animated);
     iSetTimer(1, ballmove);
