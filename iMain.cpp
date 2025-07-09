@@ -202,7 +202,7 @@ void drawTrap()
         double tx = traps[i].x;
         double ty = traps[i].y;
 
-        iShowLoadedImage(tx - l/2 - cameraX, ty - l/2 - cameraY, &dyn_spike, 100, 100);
+        iShowLoadedImage(tx - l/2 - cameraX, ty - l/2 - cameraY, &dyn_spike);
 
         traps[i].x += traps[i].dx;
         traps[i].y += traps[i].dy;
@@ -303,7 +303,7 @@ void drawHoop()
 void drawSpike() {
     // TODO: Write code for rendering spikes
     for(int i=0; i < number_of_thorns; i++) {
-        iShowLoadedImage(thorns[i].x - cameraX, thorns[i].y - cameraY, &spike, THORN_WIDTH, THORN_HEIGHT);
+        iShowLoadedImage2(thorns[i].x - cameraX, thorns[i].y - cameraY, &spike, THORN_WIDTH, THORN_HEIGHT);
     }
     
 }
@@ -311,17 +311,17 @@ void drawSpike() {
 // TODO: Create gameStates, if(gameState <= 5) call gameStateRender to render menus, else run game.
 // TODO: 0 -> mainmenu, 1 -> Play, 2 -> leaderboard, 3 -> Contributions, 4 -> Instructions, 5 -> Exit, 6 -> level play.
  void gameStateRender() {
-    iShowLoadedImage(0, 0, &menuBackground, 800, 600);
+    iShowLoadedImage2(0, 0, &menuBackground, 800, 600);
 
     switch(gameState) {
         case 0:
             // Render the main menu's buttons;
-            iShowLoadedImage(520, 340, &playButton, 240, 60);
-            iShowLoadedImage(520, 270, &leaderboardButton, 240, 60);
-            iShowLoadedImage(520, 200, &creditsButton, 240, 60);
-            iShowLoadedImage(520, 130, &instructionsButton, 240, 60);
-            iShowLoadedImage(520, 60, &exitButton, 240, 60);
-            iShowLoadedImage(460, 325, &logo, 350, 350);
+            iShowLoadedImage2(520, 340, &playButton, 240, 60);
+            iShowLoadedImage2(520, 270, &leaderboardButton, 240, 60);
+            iShowLoadedImage2(520, 200, &creditsButton, 240, 60);
+            iShowLoadedImage2(520, 130, &instructionsButton, 240, 60);
+            iShowLoadedImage2(520, 60, &exitButton, 240, 60);
+            iShowLoadedImage2(460, 325, &logo, 350, 350);
         break;
 
         case 1:
@@ -337,7 +337,7 @@ void drawSpike() {
             iText(500, 510-25, "Safat Ahmed [2405086]", GLUT_BITMAP_HELVETICA_18);
             iText(500, 460, "Hasan Mahmud [2405088]", GLUT_BITMAP_HELVETICA_18);
 
-            iShowLoadedImage(520, 60, &exitButton, 240, 60);
+            iShowLoadedImage2(520, 60, &exitButton, 240, 60);
         break;
 
         case 4:
@@ -400,11 +400,11 @@ void iDraw() {
         iSetColor(255, 0, 0);
 
         if(didBallPop) {
-            iShowLoadedImage(ballx - cameraX - 20, bally - cameraY - 20, &pop_ball, 40, 40);
+            iShowLoadedImage(ballx - cameraX - 20, bally - cameraY - 20, &pop_ball);
         } else {
             iFilledCircle(ballx - cameraX, bally - cameraY, ball_radius);
             iRotate(ballx - cameraX, bally - cameraY, degree);
-            iShowLoadedImage(ballx - 20 - cameraX, bally - 20 - cameraY, &ball, 40, 40);
+            iShowLoadedImage(ballx - 20 - cameraX, bally - 20 - cameraY, &ball);
             iUnRotate();
         }
     }
@@ -438,42 +438,37 @@ void iMouse(int button, int state, int mx, int my)
                 gameState = 0;
             }
     } 
-    else {
-        if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
-        {
-            left = true;
-        }
-        if (button == GLUT_LEFT_BUTTON && state == GLUT_UP)
-        {
-            left = false;
-        }
-        if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
-        {
-            right = true;
-        }
-        if (button == GLUT_RIGHT_BUTTON && state == GLUT_UP)
-        {
-            right = false;
-        }
-    }
+    // else {
+    // //     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+    //     {
+    //         left = true;
+    //     }
+    //     if (button == GLUT_LEFT_BUTTON && state == GLUT_UP)
+    //     {
+    //         left = false;
+    //     }
+    //     if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
+    //     {
+    //         right = true;
+    //     }
+    //     if (button == GLUT_RIGHT_BUTTON && state == GLUT_UP)
+    //     {
+    //         right = false;
+    //     }
+    // }
 }
 
 void iMouseWheel(int dir, int mx, int my)
 {
 }
 
-void iKeyboard(unsigned char key) {
+void iKeyboard(unsigned char key, int state) {
     if ((key == 'w' || key == ' ') && available_jump) {
         jump = true;
         v_y_i = V_Y_INITIAL;
         
     }
-    if(key == 'a') {
-        left = !left;
-    }
-    if(key == 'd') {
-        right = !right;
-    }
+    
 }
 
 void ballmove()
@@ -557,7 +552,7 @@ void ballmove()
         double ballLeft = ballx - ball_radius;
         double ballRight = ballx + ball_radius;
 
-        iShowLoadedImage(100, 100, &pop_ball, 40, 40);
+        iShowLoadedImage2(100, 100, &pop_ball, 40, 40);
         // Detect if the ball collides with any of the traps
         if (ballLeft < trapRight && ballRight > trapLeft && ballTop > trapBottom && ballBottom < trapTop)
         {
@@ -620,7 +615,22 @@ void BallPop() {
     }
 }
 
-void iSpecialKeyboard(unsigned char key)
+void movement(){
+    if(isKeyPressed('a')){
+          ballx-=velocity_x;
+          left=true;
+    }else{
+        left=false;
+    }
+    if(isKeyPressed('d')){
+       ballx += velocity_x;
+       right=true;
+    }else{
+        right=false;
+    }
+}
+
+void iSpecialKeyboard(unsigned char key, int state)
 {
 }
 
@@ -664,12 +674,20 @@ int main(int argc, char *argv[])
         printf("Failed to load exitButton!\n");
     
     if(iLoadImage(&ball, "assets\\images\\ball_small@2x.png"))
-        printf("Successfully loaded ballImage!\n");
+    {
+        iResizeImage(&ball, 40, 40);
+         printf("Successfully loaded ballImage!\n");
+    }
+       
     else 
         printf("Failed loading ballImage!\n");
 
     if(iLoadImage(&dyn_spike, "assets/images/dyn_thorn@2x.png"))
+    {
+        iResizeImage(&dyn_spike, 100, 100);
         printf("Successfully loaded trap!\n");
+    }
+        
     else 
         printf("Failed loading trap!\n");
 
@@ -679,13 +697,19 @@ int main(int argc, char *argv[])
         printf("Couldn't load thorns.\n");
 
     if(iLoadImage(&pop_ball, "assets\\images\\ball_pop@2x.png"))
+    {
         printf("Loaded ballPop!\n");
+        iResizeImage(&pop_ball, 40, 40);
+    }
+        
     else 
         printf("Couldn't load ballPop.\n");
 
+
     iSetTimer(10, animated);
-    iSetTimer(1, ballmove);
+    iSetTimer(10, ballmove);
     iSetTimer(15, BallPop);
-    iInitialize(800, 600, "Bounce Classic Lite");
+    iSetTimer(1, movement);
+    iOpenWindow(800, 600, "Bounce Classic Lite");
     return 0;
 }
