@@ -5,12 +5,15 @@
 
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
-#define WORLD_WIDTH 4000
-#define WORLD_HEIGHT 600
+#define WORLD_WIDTH 6000
+#define WORLD_HEIGHT 1800
 #define V_Y_INITIAL 6.5
 #define THORN_WIDTH 20
 #define THORN_HEIGHT 40
 
+// V_Y_INITIAL 6.5
+// WORLD_WIDTH 6000
+// WORLD_HEIGHT 1800
 // Variables for gravitational influence
 double v_y_i = 0;
 double del_y = 0;
@@ -21,8 +24,8 @@ int gameState = 0;
 Image playButton, leaderboardButton, creditsButton, instructionsButton, exitButton, menuBackground, logo, ball, dyn_spike, spike, pop_ball;
 double cameraX = 0, cameraY = 0;
 
-double spawnX = 90, spawnY = 150;
-double ballx = 90, bally = 150, ball_radius = 20;
+double spawnX = 200, spawnY = 150;
+double ballx = 200, bally = 150, ball_radius = 20;
 double degree = 0;
 double animate = 0;
 int l = 100;
@@ -114,57 +117,64 @@ struct thorn
 //     {3400, 2050, 120, 150},
 //     {3600, 2160, 60, 200},
 //     {3730, 2050, 120, 150}};
-platform platforms[] = {
-    {0.0, 0.0, 4000.0, 40.0},
-    {0.0, 560.0, 4000.0, 40.0},
-    {0.0, 40.0, 40.0, 520.0},
-    {3960.0, 40.0, 40.0, 520.0},
-    {200.0, 150.0, 120.0, 410.0},
-    {450.0, 40.0, 60.0, 160.0},
-    {620.0, 170.0, 150.0, 390.0},
-    {910.0, 40.0, 50.0, 110.0},
-    {910.0, 150.0, 170.0, 40.0},        
-    {1160.0, 150.0, 120.0, 40.0},
-    {1360.0, 150.0, 170.0, 40.0},       
-    {1480.0, 40.0, 50.0, 110.0},
-    {1160.0, 400.0, 120.0, 50.0},
-    {1640.0, 170.0, 120.0, 390.0},
-    {2240.0, 170.0, 120.0, 390.0},
-    {2480.0, 40.0, 60.0, 160.0},
-    {2650.0, 150.0, 60.0, 410.0},
-    {2820.0, 40.0, 60.0, 160.0},
-    {2980.0, 150.0, 60.0, 410.0},
-    {3150.0, 40.0, 60.0, 160.0},
-    {3400.0, 40.0, 120.0, 150.0},
-    {3600.0, 150.0, 60.0, 410.0},
-    {3730.0, 40.0, 120.0, 150.0},
+platform platforms[22] = {
+    {0, 0, 6000, 60},
+    {0, 540, 5680, 60},
+    {0, 60, 60, 480},
+    {4440, 600, 60, 1200},
+    {4500, 1740, 1500, 60},
+    {5940, 60, 60, 1680},
+    {800, 60, 60, 200},
+    {800, 260, 350, 60},
+    {1300, 240, 120, 300},
+    {1600, 60, 100, 200},
+    {2100, 60, 150, 200},
+    {3250, 180, 120, 360},
+    {3850, 60, 120, 150},
+    {3850, 340, 120, 200},
+    {4400, 60, 100, 190},
+    {5050, 60, 100, 190},
+    {5750, 260, 190, 60},
+    {4840, 1090, 1100, 60},
+    {4500, 1350, 1100, 60},
+    {4500, 940, 120, 60},
+    {4800, 600, 100, 190},
+    {5220, 600, 100, 190}
 };
 
 hoop hoops[] = {
-    {265.0, 80.0, 10, 40, false},
-    {1220.0, 230.0, 10, 40, false},
-    {2680.0, 80.0, 10, 40, false},
-    {3010.0, 80.0, 10, 40, false},
-    {3560.0, 205.0, 40, 10, false},
-    {3700.0, 205.0, 40, 10, false},
+    {980, 360, 10, 40, false},
+    {1640, 300, 10, 40, false},
+    {3300, 100, 10, 40, false},
+    {3900, 250, 10, 40, false},
+    {4440, 300, 10, 40, false},
+    {5250, 830, 10, 40, false},
+    {5400, 1450, 10, 40, false},
+    {2850, 350, 10, 40, false}
 };
 
+// trap traps[] = {
+//     {1010, 90, 1430, 90, 900, 80, .08, .08}
+// };
+
 trap traps[] = {
-    {1010, 90, 1430, 90, 900, 80, .5, .5}
+    {110, 110, 110, 450, 110, 120, .5, .5},
+    {2500, 110, 2500, 450, 2500, 120, .5, .5},
+    {2850, 110, 2850, 450, 2850, 240, .5, .5},
+    {3100, 110, 3100, 450, 3100, 360, .5, .5}
 };
 
 thorn thorns[] = {
-    {1900, 40},
-    {2100, 40},
-    {400, 40},
-    {3350, 40}
+    {720, 60},
+    {5670, 60},
+    {5050, 600}
 };
 
-int number_of_platforms = 23;
-int number_of_hoops = 6;
-int number_of_traps = 1;
+int number_of_platforms = 22;
+int number_of_hoops = 8;
+int number_of_traps = 4;
 // TODO: Initialise the below variable after constructing spike code
-int number_of_thorns = 4;
+int number_of_thorns = 3;
 
 void updateCamera()
 { // ! Sliding Window Camera
