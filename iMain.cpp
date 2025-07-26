@@ -890,7 +890,7 @@ void ballmove()
             available_lives--;
             didBallPop = true;
 
-            iPlaySound("assets\\sounds\\balloon-pop-48030.mp3", 0, 100);
+            iPlaySound("assets\\sounds\\balloon-pop-48030.wav", 0, 100);
             }
             break;
         }
@@ -930,7 +930,7 @@ void ballmove()
                 available_lives--;
                 didBallPop = true;
 
-                iPlaySound("assets\\sounds\\balloon-pop-48030.mp3", 0, 100);
+                iPlaySound("assets\\sounds\\balloon-pop-48030.wav", 0, 100);
             }
             break;
             // iDelay(2);
