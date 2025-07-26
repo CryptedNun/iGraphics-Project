@@ -1,5 +1,5 @@
 /***
- * iFont.h: v0.1.2
+ * iFont.h: v0.1.3
  * A simple font rendering system using FreeType and OpenGL.
  * Provides functions to initialize the font system, render text at specified positions,
  * and free resources.
@@ -9,7 +9,7 @@
  * Author: Mahir Labib Dihan
  * Email: mahirlabibdihan@gmail.com
  * GitHub: https://github.com/mahirlabibdihan
- * Date: July 5, 2025
+ * Date: July 11, 2025
  */
 
 #include "glut.h"
@@ -79,9 +79,9 @@ uint32_t getNextUTF8Codepoint(const char *&p)
     return codepoint;
 }
 
-void iShowText(double x, double y, const char *text, const char *fontPath, int fontSize = 48)
+void iShowText(double x, double y, const char *text, const char *fontPath, int fontSize = 32)
 {
-    if (!g_ftInitialized)
+    if (!iInitializeFont())
     {
         printf("Font system not initialized.\n");
         return;

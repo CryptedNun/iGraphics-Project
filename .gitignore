@@ -1,6 +1,9 @@
-obj/*.o
 *.layout
 *.depend
 .vscode
 *.bin
 bin/*.exe
+release
+*.o
+demo
+MINGW
